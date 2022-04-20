@@ -33,3 +33,15 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.rutins.aleks"
+            artifactId = "diagonal"
+            version = "0.1.2"
+
+            from(components["java"])
+        }
+    }
+}
