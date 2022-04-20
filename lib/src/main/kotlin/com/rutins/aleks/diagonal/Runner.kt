@@ -12,6 +12,7 @@ class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
         val instance = test.second(subjects, this)
         try {
             instance.run()
+            logger.log(logger.successColor("SUCCESS"))
         } catch(err: Throwable) {
             logger.log(logger.failedColor("FAILED"))
             logger.log("  ${err.message}")

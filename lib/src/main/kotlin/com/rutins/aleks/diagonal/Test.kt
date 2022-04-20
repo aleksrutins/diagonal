@@ -17,6 +17,9 @@ abstract class Test(val subjects: Array<Subject>, val runner: Runner) {
         }
         try {
             fn()
+            with(runner.logger) {
+                log("  ${successColor("SUCCESS")}")
+            }
         } catch (err: Throwable) {
             with(runner.logger) {
                 log("  ${failedColor("FAILED")}")
