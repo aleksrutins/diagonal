@@ -1,28 +1,63 @@
 package com.rutins.aleks.diagonal
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
 
 class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
+    private fun createMessage(messageName: String, data: String)
+        = "/* log:tag:diagonal */ {\"Message\":\"$messageName\",\"Data\":$data}";
+
+    private data class TestReport(val name: String, val success: Boolean)
+
+    private fun String.toJSON(): String {
+        return "\"${this.replace("\"", "\\\"")}\""
+    }
+
+    fun log(message: String) {
+        logger.log(createMessage("logLine", message.toJSON()))
+    }
+
+    private fun clearTestList() {
+        logger.log(createMessage("clearTests", "null"))
+    }
+
+    private fun enumerateTest(testName: String) {
+        logger.log(createMessage("enumerateTest", testName.toJSON()))
+    }
+
+    private fun notifyTestStart(testName: String) {
+        logger.log(createMessage("testStart", testName.toJSON()))
+    }
+
+    private fun statusReport(testName: String, success: Boolean) {
+        logger.log(createMessage("statusReport", Json.encodeToString(TestReport(testName, success))))
+    }
     fun runAll(subjects: Array<Subject>) {
-        logger.logVerbose("Running all tests")
+        clearTestList()
+        for (test in tests) {
+            enumerateTest(test.first.simpleName)
+        }
         for (test in tests) {
             run(test, subjects)
         }
     }
     fun run(test: TestConstructor<*>, subjects: Array<Subject>) {
-        logger.logVerbose("describe " + logger.primaryColor(test.first.simpleName))
+        notifyTestStart(test.first.simpleName)
         val instance = test.second(subjects, this)
         try {
             instance.run()
-            logger.log(logger.successColor("SUCCESS"))
+            statusReport(test.first.simpleName, true)
         } catch(err: Throwable) {
-            logger.log(logger.failedColor("FAILED"))
-            logger.log("  ${err.message}")
+            log("ERROR:  ${err.message}")
+            statusReport(test.first.simpleName, false)
         } finally {
             if (instance.errors.size > 0) {
-                logger.log(logger.failedColor("FAILED in sub-clauses:"))
+                log(logger.failedColor("FAILED in sub-clauses:"))
                 for(err in instance.errors) {
-                    logger.log("  it ${logger.primaryColor(err.first)}")
-                    logger.log("    ${err.second.message}")
+                    log("  it ${logger.primaryColor(err.first)}")
+                    log("    ${err.second.message}")
                 }
+                statusReport(test.first.simpleName, false)
             }
         }
     }

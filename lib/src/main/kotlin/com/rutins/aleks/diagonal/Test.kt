@@ -12,18 +12,18 @@ abstract class Test(val subjects: Array<Subject>, val runner: Runner) {
     fun Boolean.expect(message: String) = if(this) Unit else throw ExpectationException(message)
 
     fun it(doesWhat: String, fn: () -> Unit) {
-        with(runner.logger) {
-            logVerbose("  it ${primaryColor(doesWhat)}")
+        with(runner) {
+            log("  it $doesWhat")
         }
         try {
             fn()
-            with(runner.logger) {
-                log("  ${successColor("SUCCESS")}")
+            with(runner) {
+                log("  SUCCESS")
             }
         } catch (err: Throwable) {
-            with(runner.logger) {
-                log("  ${failedColor("FAILED")}")
-                log("    ${failedColor("Error:")} ${err.message}")
+            with(runner) {
+                log("  FAILED")
+                log("    Error: ${err.message}")
             }
             errors.add(doesWhat to err)
         }
