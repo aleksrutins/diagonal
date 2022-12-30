@@ -47,7 +47,6 @@ class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
         val instance = test.second(subjects, this)
         try {
             instance.run()
-            statusReport(test.first.simpleName, true)
         } catch(err: Throwable) {
             log("ERROR:  ${err.message}")
             statusReport(test.first.simpleName, false)
@@ -59,6 +58,8 @@ class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
                     log("    ${err.second.message}")
                 }
                 statusReport(test.first.simpleName, false)
+            } else {
+                statusReport(test.first.simpleName, true)
             }
         }
     }
