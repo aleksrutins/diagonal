@@ -5,7 +5,7 @@ import kotlinx.serialization.encodeToString
 
 class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
     private fun createMessage(messageName: String, data: String)
-        = "/* log:tag:diagonal */ {\"Message\":\"$messageName\",\"Data\":$data}";
+        = "/* log:tag:diagonal */ {\"message\":\"$messageName\",\"data\":$data}";
 
     @Serializable
     private data class TestReport(val name: String, val success: Boolean)
