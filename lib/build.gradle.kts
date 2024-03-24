@@ -7,10 +7,11 @@
  */
 
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.8.0"
 
+    kotlin("jvm") version "1.9.23"
     kotlin("plugin.serialization") version "1.8.0"
+
+    id("io.ktor.plugin") version "2.3.9"
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
@@ -37,16 +38,24 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
+    implementation("io.ktor:ktor-server-core:2.3.9")
+    implementation("io.ktor:ktor-server-netty:2.3.9")
+    implementation("ch.qos.logback:logback-classic:1.5.3")
 }
 
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.rutins.aleks"
+            groupId = "com.farthergate"
             artifactId = "diagonal"
             version = "0.1.2"
 
             from(components["java"])
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }

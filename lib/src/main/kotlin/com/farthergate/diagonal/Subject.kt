@@ -1,4 +1,4 @@
-package com.rutins.aleks.diagonal
+package com.farthergate.diagonal
 
 interface Subject {
     class NotFoundException(name: String) : Exception("Subject not found: $name")

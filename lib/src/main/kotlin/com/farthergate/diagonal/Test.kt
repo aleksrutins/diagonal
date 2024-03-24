@@ -1,4 +1,4 @@
-package com.rutins.aleks.diagonal
+package com.farthergate.diagonal
 
 class ExpectationException(message: String) : Exception("Expectation not met: $message")
 typealias TestConstructor<T> = Pair<Class<T>, (Array<Subject>, Runner) -> Test>
@@ -30,7 +30,7 @@ abstract class Test(val subjects: Array<Subject>, val runner: Runner) {
     }
 }
 
-inline fun <reified T: Subject> describe(crossinline test: Test.(T) -> Unit): TestConstructor<T>{
+inline fun <reified T: Subject> describe(crossinline test: Test.(T) -> Unit): TestConstructor<T> {
     return T::class.java to { subjects, runner ->
         object : Test(subjects, runner) {
             override fun run() = this.test(require())

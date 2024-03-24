@@ -1,9 +1,9 @@
-package com.rutins.aleks.diagonal
+package com.farthergate.diagonal
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.encodeToString
 
-class Runner(private val tests: Array<TestConstructor<*>>, val logger: Logger) {
+class Runner(private val tests: Array<out TestConstructor<*>>, val logger: Logger) {
     private fun createMessage(messageName: String, data: String)
         = "/* log:tag:diagonal */ {\"message\":\"$messageName\",\"data\":$data}";
 
