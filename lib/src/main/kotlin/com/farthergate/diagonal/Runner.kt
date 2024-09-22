@@ -45,11 +45,13 @@ class Runner(private val tests: Array<out TestConstructor<*>>, val logger: Logge
     fun run(test: TestConstructor<*>, subjects: Array<Subject>) {
         notifyTestStart(test.first.simpleName)
         val instance = test.second(subjects, this)
+        var failedBadly = false
         try {
             instance.run()
         } catch(err: Throwable) {
             log("ERROR:  ${err.message}")
             statusReport(test.first.simpleName, false)
+            failedBadly = true
         } finally {
             if (instance.errors.size > 0) {
                 log(logger.failedColor("FAILED in sub-clauses:"))
@@ -58,7 +60,7 @@ class Runner(private val tests: Array<out TestConstructor<*>>, val logger: Logge
                     log("    ${err.second.message}")
                 }
                 statusReport(test.first.simpleName, false)
-            } else {
+            } else if(!failedBadly) {
                 statusReport(test.first.simpleName, true)
             }
         }
